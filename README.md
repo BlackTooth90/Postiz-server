@@ -2,6 +2,8 @@
 
 Self-hosted [Postiz](https://postiz.com) on a Hetzner Cloud server, at **https://postiz.open2x.io**.
 
+**👉 Full click-by-click instructions: [docs/DEPLOYMENT-GUIDE.md](docs/DEPLOYMENT-GUIDE.md)**. The steps below are the short version.
+
 | File | Purpose |
 |---|---|
 | `docker-compose.yaml` | The whole stack: Caddy (HTTPS) + Postiz + Postgres + Redis + Temporal |

@@ -21,6 +21,23 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 systemctl enable --now docker
 
+echo "==> SSH: key-only login (passwords disabled)"
+if [[ -s /root/.ssh/authorized_keys ]]; then
+  cat > /etc/ssh/sshd_config.d/00-postiz-hardening.conf <<'EOF'
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin prohibit-password
+EOF
+  if sshd -t; then
+    systemctl reload ssh 2>/dev/null || systemctl restart ssh 2>/dev/null || true
+  else
+    rm -f /etc/ssh/sshd_config.d/00-postiz-hardening.conf
+    echo "    sshd config test failed - hardening skipped." >&2
+  fi
+else
+  echo "    No SSH key found for root - skipped so you don't get locked out."
+fi
+
 echo "==> Firewall: allow SSH, HTTP, HTTPS only"
 ufw allow OpenSSH
 ufw allow 80/tcp
@@ -65,4 +82,9 @@ if [[ -n "$SERVER_IP" && "$SERVER_IP" == "$DNS_IP" ]]; then
   echo "    DNS OK. Start Postiz with:  docker compose up -d"
 else
   echo "    DNS not pointing here yet. Add the A record at GoDaddy, wait, then: docker compose up -d"
+fi
+
+if [[ -f /var/run/reboot-required ]]; then
+  echo
+  echo "==> A reboot is required to finish updates. Run: reboot   (then ssh back in)"
 fi
