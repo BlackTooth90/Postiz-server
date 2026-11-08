@@ -1,0 +1,6 @@
+# Caddy gets and renews the Let's Encrypt certificate automatically.
+# POSTIZ_DOMAIN comes from .env (e.g. postiz.open2x.io).
+{$POSTIZ_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy postiz:5000
+}

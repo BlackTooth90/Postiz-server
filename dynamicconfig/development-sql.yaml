@@ -1,0 +1,9 @@
+# Temporal dynamic config, copied from the official gitroomhq/postiz-docker-compose repo.
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+# Upstream marks this "dev only", but Postiz's official stack ships with it on so that
+# search attributes Postiz registers at startup are visible immediately. Kept as upstream.
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true
+    constraints: {}
