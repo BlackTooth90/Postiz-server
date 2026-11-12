@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 
 echo "==> Updating system packages"
 apt-get update -y
-DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold upgrade -y
 DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl git ufw unattended-upgrades openssl dnsutils
 
 echo "==> Enabling automatic security updates"
