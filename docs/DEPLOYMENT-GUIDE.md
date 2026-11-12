@@ -295,54 +295,81 @@ If something is wrong, see **Troubleshooting** at the end of this guide.
 
 ## Part 11: Create the LinkedIn app
 
-LinkedIn only lets apps post if the app is linked to a **LinkedIn Company Page** that you administer.
+> **Status (Nov 12, 2026):** app **Open2X Postiz** created under the **Open2X** Company Page, verified,
+> *Share on LinkedIn* and *Sign In with LinkedIn (OpenID Connect)* added, **Advertising API requested and awaiting LinkedIn review**.
 
-### 11.1 Make sure you have a Company Page
-- If you already admin an `Open2x` page, skip ahead.
-- Otherwise: on linkedin.com, click **For Business** (top right), then **Create a Company Page**, choose **Company**, and fill in the name, URL and logo.
+LinkedIn only lets apps post if the app is attached to a **Company Page** you administer.
+
+### 11.1 Pick the right page: Company Page, not Showcase Page
+- **Xonomy.Open2X is a Showcase Page** (its address contains `/showcase/`). The "Create app" form **rejects showcase pages**.
+- Attach the app to the **parent Company Page, Open2X**: `https://www.linkedin.com/company/106103639/`.
+  To find a showcase page's parent: open it, click **View as member**, and look under **Affiliated pages → Parent**.
+- This doesn't limit posting. Postiz can post to **every page you admin** (Open2X **and** Xonomy.Open2X).
 
 ### 11.2 Create the app
 1. Go to <https://www.linkedin.com/developers/apps> and click **Create app**.
 2. Fill in:
-   - **App name:** `Open2x Postiz`
-   - **LinkedIn Page:** search for and select your company page.
-   - **Privacy policy URL:** optional (e.g. `https://open2x.io/privacy` if you have one).
-   - **App logo:** upload any square image (required).
+   - **App name:** `Open2X Postiz`
+   - **LinkedIn Page:** paste the Company Page URL above, then **click the Open2X suggestion**. Typed text alone gives "Please input a valid LinkedIn Page URL". This can't be changed later.
+   - **Privacy policy URL:** `https://xonomy.open2x.io/privacy/`
+   - **App logo:** the Open2X logo (you can change it later).
    - Tick the legal agreement and click **Create app**.
 
 ### 11.3 Verify the app with your page
-1. In the app, open the **Settings** tab. Next to the company page, click **Verify**.
-2. Click **Generate URL**, then open that URL yourself (you're the page admin) and click **Verify**.
-3. Back in the app, it should show **Verified**.
+1. **Settings** tab → next to the company page, click **Verify** → **Generate URL**.
+2. Open that URL yourself (you're the page admin) and click **Verify**.
+   Until the app is verified, most products are greyed out.
 
-### 11.4 Add the products
-1. Open the **Products** tab.
-2. Find **Share on LinkedIn**, click **Request access**, tick the terms and confirm. It's usually approved instantly.
-3. Find **Sign In with LinkedIn using OpenID Connect**, click **Request access** and confirm. Also instant.
-4. *(Only if you want to post as the company page, not just your personal profile.)* Request **Community Management API**.
-   LinkedIn reviews this manually and may ask you to use a separate app just for it, plus business verification. Start with your personal profile; you can add this later.
+### 11.4 Add the products Postiz needs
+Postiz asks LinkedIn for **7 permissions, for both "LinkedIn" (profile) and "LinkedIn Page"**,
+and refuses the connection (`NotEnoughScopes`) if any is missing. So **nothing connects until all three products below are added.**
 
-### 11.5 Set the redirect URL and copy the keys
+| Product | Gives | How |
+|---|---|---|
+| Share on LinkedIn | `w_member_social` | Request access: instant |
+| Sign In with LinkedIn using OpenID Connect | `openid`, `profile` | Request access: instant |
+| **Advertising API** (Development Tier) | `r_basicprofile`, `rw_organization_admin`, `w_organization_social`, `r_organization_social` | Request access → **application form** → LinkedIn reviews it and emails you |
+
+**Don't request the Community Management API.** It must be the only product on an app, and Postiz doesn't need it.
+
+**Advertising API form answers** (keep everything "direct customer"; you only manage your own pages):
+
+| Question | Answer |
+|---|---|
+| Company website | `https://www.open2x.io/` |
+| Primary use case | **Direct Advertiser** |
+| Where are your customers based | Asia |
+| How many clients / % B2B | **N/A (Direct Customer)** |
+| Customer category | **Direct Customer** |
+| Industries | Financial Services / Banking |
+| Annual ad spend | **N/A** |
+| Intended use case | **Reporting and ROI** (add Campaign Management only if you run paid ads) |
+| Partnerships with other platforms | **Other**: "None" |
+| Business / "what will you build" | Internal, self-hosted Postiz for publishing organic posts to Open2X and Xonomy.Open2X pages and reading their post performance; not offered to third parties; no scraping or data sharing. |
+
+### 11.5 Set the redirect URLs and copy the keys
 1. Open the **Auth** tab.
-2. Under **OAuth 2.0 settings → Authorized redirect URLs for your app**, click the pencil, then **+ Add redirect URL**, and add:
+2. Under **OAuth 2.0 settings → Authorized redirect URLs for your app**, click the pencil, then **+ Add redirect URL**, and add both:
    ```
    https://postiz.open2x.io/integrations/social/linkedin
+   https://postiz.open2x.io/integrations/social/linkedin-page
    ```
-   (For a company page later, also add `https://postiz.open2x.io/integrations/social/linkedin-page`.)
    Click **Update**.
-3. At the top of the **Auth** tab, copy the **Client ID** and **Primary Client Secret** (click the eye icon to reveal it).
+3. At the top of the **Auth** tab are the **Client ID** and **Primary Client Secret**. Never share the secret.
+4. After approval, check **OAuth 2.0 scopes** on this tab. All 7 must be listed:
+   `openid`, `profile`, `w_member_social`, `r_basicprofile`, `rw_organization_admin`, `w_organization_social`, `r_organization_social`.
 
 ### 11.6 Put the keys on the server
+SSH in (`ssh root@2.31.162.139`), then run these one at a time. The secret is typed hidden, so it never appears on screen or in shell history:
 ```bash
-cd ~/Postiz-server
-nano .env
+cd /root/Postiz-server
 ```
-Fill in:
+```bash
+read -p "Client ID: " CID; read -s -p "Client Secret (hidden): " CSEC; echo
 ```
-LINKEDIN_CLIENT_ID=paste-client-id
-LINKEDIN_CLIENT_SECRET=paste-client-secret
+```bash
+sed -i "s#^LINKEDIN_CLIENT_ID=.*#LINKEDIN_CLIENT_ID=$CID#; s#^LINKEDIN_CLIENT_SECRET=.*#LINKEDIN_CLIENT_SECRET=$CSEC#" .env && grep -E '^LINKEDIN_CLIENT_(ID|SECRET)=.' .env | cut -c1-30
 ```
-Save (**Ctrl+O**, **Enter**, **Ctrl+X**), then apply:
 ```bash
 docker compose up -d
 ```
@@ -352,14 +379,18 @@ Wait until `docker compose ps` shows postiz as **healthy** again.
 
 ## Part 12: Connect LinkedIn in Postiz and send a test post
 
+Do this **after LinkedIn approves the Advertising API** and the 7 scopes show on the Auth tab.
+
 1. Open https://postiz.open2x.io.
-2. Click **Add Channel**, then **LinkedIn**.
+2. Click **Add Channel**, then **LinkedIn Page**. (Use **LinkedIn** instead for your personal profile.)
 3. LinkedIn opens. Log in if needed and click **Allow**.
-4. You return to Postiz, with your LinkedIn profile listed as a channel.
-5. **Test:** click **Create Post**, choose the LinkedIn channel, write `Test post from Postiz`, set the time to 5 minutes from now, and click **Add to calendar** / **Schedule**.
-6. After 5 minutes, check your LinkedIn profile. The post should be there. Delete it on LinkedIn afterwards if you like.
+4. Choose the page: **Xonomy.Open2X** and/or **Open2X**.
+5. **Test:** click **Create Post**, choose the channel, write a short test post, set the time to 5 minutes from now, and schedule it.
+6. After 5 minutes, check the page on LinkedIn. Delete the test post afterwards if you like.
 
 > LinkedIn logins expire after about **60 days**. When Postiz shows the channel as disconnected, click it and reconnect. It takes 10 seconds.
+>
+> **Moving from Typefully:** posts already scheduled in Typefully still go out from Typefully. Don't schedule the same post in both.
 
 ---
 

@@ -83,9 +83,11 @@ docker compose up -d
 
 ## Step 4: Connect LinkedIn
 
-1. Go to <https://www.linkedin.com/developers/apps> and click **Create app**. LinkedIn requires a Company Page to attach the app to.
-2. **Products** tab: add **Sign In with LinkedIn using OpenID Connect** and **Share on LinkedIn**.
-   To post as a *Company Page*, also request **Community Management API**. LinkedIn reviews that one.
+1. Go to <https://www.linkedin.com/developers/apps> and click **Create app**. Attach it to the **Open2X Company Page**.
+   Xonomy.Open2X is a *Showcase* Page, which the form rejects, but Postiz can still post to it.
+2. **Products** tab: add **Share on LinkedIn**, **Sign In with LinkedIn using OpenID Connect** and **Advertising API**
+   (the last one has a review form). Postiz needs all three, even for a personal profile. Don't request Community Management API.
+   Full details and form answers: [guide, Part 11](docs/DEPLOYMENT-GUIDE.md#part-11-create-the-linkedin-app).
 3. **Auth** tab, under Authorized redirect URLs, add:
    - `https://postiz.open2x.io/integrations/social/linkedin`
    - `https://postiz.open2x.io/integrations/social/linkedin-page` (only for company pages)
@@ -93,7 +95,7 @@ docker compose up -d
    ```bash
    docker compose up -d
    ```
-5. In Postiz: **Add Channel → LinkedIn**, then log in and approve.
+5. After LinkedIn approves the Advertising API: in Postiz, **Add Channel → LinkedIn Page**, then log in and approve.
 
 Other networks work the same way: create a developer app, set the callback
 `https://postiz.open2x.io/integrations/social/<provider>`, put the keys in `.env` and run `docker compose up -d`.
