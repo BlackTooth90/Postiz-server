@@ -1,0 +1,97 @@
+[
+ {
+  "id": "2026-11-15-proof",
+  "label": "For corporate & SME banking",
+  "headline": "Give green clients proof they can show"
+ },
+ {
+  "id": "2026-11-17-reporting",
+  "label": "For finance & regulatory reporting",
+  "headline": "Every green figure, traceable to its evidence"
+ },
+ {
+  "id": "2026-11-19-security",
+  "label": "For IT & security teams",
+  "headline": "Your data stays inside the bank"
+ },
+ {
+  "id": "2026-11-22-ai",
+  "label": "Bring your own AI",
+  "headline": "AI that helps. People who decide."
+ },
+ {
+  "id": "2026-11-24-jordan",
+  "label": "Made for Jordanian banks",
+  "headline": "Arabic and English. Conventional and Islamic.",
+  "facts": true,
+  "size": 60
+ },
+ {
+  "id": "2026-12-01-book",
+  "label": "For sustainability & strategy",
+  "headline": "How green is your loan book today?"
+ },
+ {
+  "id": "2026-12-03-deal",
+  "label": "For relationship managers",
+  "headline": "Can this deal be green? Know in seconds."
+ },
+ {
+  "id": "2026-12-06-customer",
+  "label": "Less chasing of clients",
+  "headline": "Let the customer answer"
+ },
+ {
+  "id": "2026-12-08-consistent",
+  "label": "No taxonomy expert needed",
+  "headline": "Same deal. Same answer. Whoever prepares it.",
+  "size": 60
+ },
+ {
+  "id": "2026-12-10-defensible",
+  "label": "Green finance, defensible",
+  "headline": "What makes a green number defensible?"
+ },
+ {
+  "id": "2026-12-13-ar",
+  "rtl": true,
+  "label": "مصمّم للبنوك الأردنية",
+  "headline": "نمِّ محفظتك الخضراء بأرقام مُثبتة بالدليل",
+  "sub": "ثنائي اللغة بالكامل، للتمويل الإسلامي والتقليدي، ويعمل على خوادم البنك",
+  "foot": "xonomy.open2x.io/ar",
+  "cta": "اطلبوا عرضاً توضيحياً"
+ },
+ {
+  "id": "2026-12-15-after",
+  "label": "After approval",
+  "headline": "Still green a year later?"
+ },
+ {
+  "id": "2026-12-17-books",
+  "label": "For finance & reporting",
+  "headline": "Green figures that still match the books"
+ },
+ {
+  "id": "2026-12-20-issb",
+  "label": "Add-on · ISSB Disclosure",
+  "headline": "IFRS S1 and S2, from the same approved data",
+  "size": 60
+ },
+ {
+  "id": "2026-12-22-emissions",
+  "label": "Add-on · Financed Emissions",
+  "headline": "The hardest number in climate disclosure"
+ },
+ {
+  "id": "2026-12-27-whynow",
+  "label": "Why now",
+  "headline": "Green finance is now a regulated, audited number",
+  "sub": "Most banks still produce it by hand.",
+  "size": 60
+ },
+ {
+  "id": "2026-12-29-pilot",
+  "label": "Planning 2027?",
+  "headline": "See your own book in Xonomy first"
+ }
+]
